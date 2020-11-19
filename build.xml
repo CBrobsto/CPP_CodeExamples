@@ -1,0 +1,75 @@
+<project name="Ser321 Assign5 C++ Message GUI Client/Server"
+         default="targets" basedir="."
+         xmlns="antlib:org.apache.tools.ant">
+   <taskdef resource="cpptasks.tasks"/>
+   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+   <property name="src" value="./src" />
+   <property name="lib" value="./lib" />
+   <property name="src.cpp.dir" value="src"/>
+   <property name="obj.dir" value="obj"/>
+   <property name="dist.dir" value="bin"/>
+   <property environment="env"/>
+
+   <target name="targets">
+     <echo message="targets are clean, prepare, build.cpp.server, build.cpp.client, server, and client"/>
+     <echo message="execute manually with: ./bin/Client"/>
+   </target>
+
+   <target name="clean">
+     <delete dir="${obj.dir}" failonerror="false"/>
+     <delete dir="${dist.dir}" failonerror="false"/>
+   </target>
+
+   <target name="prepare">
+      <!-- Create the time stamp -->
+      <tstamp/>
+      <!-- Create the build directory structure used by compile -->
+      <echo message="home defined as: ${env.HOME}" />
+      <mkdir dir="${dist.dir}" />
+      <mkdir dir="${obj.dir}" />
+      <if>
+         <isset property="env.USERNAME"/>
+         <then>
+            <echo message="detected username is: ${env.USERNAME}"/>
+         </then>
+      <elseif>
+         <isset property="env.USER"/>
+         <then>
+            <echo message="detected user is: ${env.USER}"/>
+         </then>
+      </elseif>
+      </if>
+      <echo message="host name is: ${os.name}"/>
+      <echo message="host arch is: ${os.arch}"/>
+      <echo message="host version is: ${os.version}"/>
+      <echo message="base directory is: ${basedir}"/>
+   </target>
+
+   <target name="build.cpp.client" depends="prepare">
+      <cc outtype="executable" subsystem="console"
+          outfile="${dist.dir}/client"
+          objdir="${obj.dir}">
+	  <compilerarg value="-std=c++14"/>
+          <includepath>
+             <dirset dir="/" includes="usr/include,usr/local/include"/>
+          </includepath>
+          <libset dir="/usr/lib" libs="stdc++,fltk"/>
+          <fileset dir="${src.cpp.dir}/Client/"
+            includes="MessageGui.cpp,Controller.cpp,Message.cpp,MessageLibrary.cpp"/>
+      </cc>
+   </target>
+
+   <target name="client" depends="build">
+      <exec executable="./bin/client"/>
+   </target>
+
+   <target name="build.cpp.server" depends="build">
+     <echo message="This is wher the server would be built, not implemented.">
+   </target>
+
+   <target name="server" depends="build">
+     <echo message="This is wher the server would be launched, not implemented.">
+   </target>
+
+</project>
